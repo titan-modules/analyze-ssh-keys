@@ -1,20 +1,29 @@
 {
-	"ssh_keys": {
+	"ssh_public_keys": {
 		"path": {
 			"type": "text", 
 			"nullable": false
 		}, 
-		"type": {
-			"type": "text", 
-			"nullable": false
-		},
-		"secure": {
+		"strength": {
 			"default": 0, 
-			"type": "bool"
+			"type": "integer",
+			"nullable": false
 		},
-		"created": {
+		"fingerprint": {
+			"nullable": false, 
+			"type": "text"
+		},
+		"comment": {
+			"type": "text", 
+			"nullable": true
+		},
+		"key_type": {
 			"type": "text", 
 			"nullable": false
-		}
+		},
+        "date" : {
+            "type" : "text",
+            "nullable" : false,
+        }
 	}
 }
