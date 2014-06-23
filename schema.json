@@ -23,7 +23,7 @@
 		},
         "date" : {
             "type" : "text",
-            "nullable" : false,
+            "nullable" : false
         }
 	}
 }
