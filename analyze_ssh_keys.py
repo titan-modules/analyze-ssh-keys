@@ -21,6 +21,7 @@ from titantools.system import execute_command as shell_out
 from time import time, gmtime, strftime
 from os.path import dirname,basename,isfile
 from os import chmod
+from titantools.decorators import run_every_60
 
 # Set Logging Status
 logging_enabled = False
@@ -28,6 +29,7 @@ logging_enabled = False
 # Set datastore directory
 DATASTORE = argv[1]
 
+@run_every_60
 class AnalyzeSSHKeys(object):
     """ AnalyzeSSHKeys """
 
@@ -65,7 +67,7 @@ class AnalyzeSSHKeys(object):
       self.status = 0
 
     def analyze(self):
-      """w
+      """
       This is the 'main' method that launches all of the other checks
       """
       self.getkeys()
@@ -86,11 +88,13 @@ class AnalyzeSSHKeys(object):
         ORM = TiORM(DATASTORE)
         if isfile(DATASTORE):
             chmod(DATASTORE, 0600)
-        for k, v in schema.iteritems():
-            ORM.initialize_table(k, v)
 
-        data_science = DataScience(ORM, self.datastore, "ssh_public_keys")
-        data_science.get_all()
+        for k, v in schema.iteritems():
+          ORM.initialize_table(k, v)
+
+        for row in self.datastore:
+          ORM.insert("ssh_keys", row)
+        
 
 if __name__ == "__main__":
 
