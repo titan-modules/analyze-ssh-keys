@@ -12,16 +12,17 @@ To use:
 
 import json
 import logging
-from sys import argv, exit
+from sys import argv, exit, path
+
+# Titan includes
 from titantools.orm import TiORM
 from titantools.data_science import DataScience
 from titantools.system import execute_command as shell_out
 
-# from sys import argv
 from time import time, gmtime, strftime
 from os.path import dirname,basename,isfile
 from os import chmod
-from titantools.decorators import run_every_60
+#from titantools.decorators import run_every_5
 
 # Set Logging Status
 logging_enabled = False
@@ -29,7 +30,7 @@ logging_enabled = False
 # Set datastore directory
 DATASTORE = argv[1]
 
-@run_every_60
+#@run_every_5
 class AnalyzeSSHKeys(object):
     """ AnalyzeSSHKeys """
 
@@ -52,7 +53,7 @@ class AnalyzeSSHKeys(object):
 
         # Append to master
         self.datastore.append({
-            "path": key_parts[0].replace('//', '/'),
+            "name": key_parts[0].replace('//', '/'),
             "strength": key_parts[1],
             "fingerprint": key_parts[2],
             "comment": key_parts[3],
@@ -91,10 +92,9 @@ class AnalyzeSSHKeys(object):
 
         for k, v in schema.iteritems():
           ORM.initialize_table(k, v)
-
-        for row in self.datastore:
-          ORM.insert("ssh_keys", row)
         
+        data_science = DataScience(ORM, self.datastore, 'ssh_keys')
+        data_science.get_new_entries()
 
 if __name__ == "__main__":
 
